@@ -1,17 +1,11 @@
 
+var configurationUrl = 'http://nothingmn.github.io/neurio.config.html';
 
 ////////////////////////Configuration
-var initialized = false;
-var options = {};
-
-Pebble.addEventListener("ready", function() {
-  console.log("ready called!");
-  initialized = true;
-});
-
 Pebble.addEventListener("showConfiguration", function() {
   console.log("showing configuration");
-  Pebble.openURL('https://dl.dropboxusercontent.com/u/6186393/neurio/configurable.html?'+encodeURIComponent(JSON.stringify(options)));
+  var options = config.getConfig();
+  Pebble.openURL(configurationUrl + '?'+encodeURIComponent(JSON.stringify(options)));
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
@@ -19,7 +13,7 @@ Pebble.addEventListener("webviewclosed", function(e) {
   // webview closed
   //Using primitive JSON validity and non-empty check
   if (e.response.charAt(0) == "{" && e.response.slice(-1) == "}" && e.response.length > 5) {
-    options = JSON.parse(decodeURIComponent(e.response));
+    var options = JSON.parse(decodeURIComponent(e.response));
     console.log("Options = " + JSON.stringify(options));
     config.setConfig(options);
     
